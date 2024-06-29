@@ -2,7 +2,7 @@
 import petTemplate from '../fixtures/pet.json';
 import { generateRandomPet } from '../support/helper';
 
-let pet = generateRandomPet(petTemplate, true, true, true, true, false);
+let pet = generateRandomPet(petTemplate, true, true, true, true, true);
 let petId;
 describe('PET test suite', () => {
 
@@ -47,9 +47,8 @@ describe('PET test suite', () => {
 
 describe('PET test suite', () => {
 
-  pet = generateRandomPet(petTemplate, false, true, true, true, false);
+  pet = generateRandomPet(petTemplate, false, true, true, true, true);
 
-  it('Add a new pet to the store', () => { })
 
   it('Update pet', () => {
     cy.log('Update pet');
@@ -77,12 +76,21 @@ describe('PET test suite', () => {
         expect(response.body.tags[1].id).to.eq(pet.tags[1].id)
         expect(response.body.tags[1].name).to.eq(pet.tags[1].name);
         expect(response.body.status).to.eq(pet.status);
-
-
       })
 
     })
 
+  })
+
+  it('Find pet by status', () => {
+    cy.log('Find pet by status')
+    cy.request('GET',`/pet/findByStatus?status=${pet.status}`).then((response) => {
+      expect(response.status).to.eq(200);
+      response.body.forEach(pet => {
+        expect(pet.status).to.eq(pet.status)
+      });
+
+    })
   })
 
 })

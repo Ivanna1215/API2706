@@ -10,6 +10,6 @@ export function generateRandomPet(petObject, isIdChanged = false, isNameChanged 
     isTagsChanged ? petObject.tags[1] = petObject.tags[0] : petObject.tags[1];
     isTagsChanged ? petObject.tags[1].name = faker.animal.cat() : petObject.tags[1].name;
     isTagsChanged ? petObject.tags[1].id = faker.number.int({ min: 9000, max: 900000 }) : petObject.tags[1].id;
-    isStatusChanged ? petObject.status = faker.random.arrayElement['available', 'pending', 'sold'] : petObject.status;
+    isStatusChanged ? petObject.status = ['available', 'pending', 'sold'][Math.floor(Math.random() * 3)] : petObject.status;
     return petObject;
 }
