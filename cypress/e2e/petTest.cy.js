@@ -84,13 +84,18 @@ describe('PET test suite', () => {
 
   it('Find pet by status', () => {
     cy.log('Find pet by status')
-    cy.request('GET',`/pet/findByStatus?status=${pet.status}`).then((response) => {
+    cy.request('GET', `/pet/findByStatus?status=${pet.status}`).then((response) => {
       expect(response.status).to.eq(200);
       response.body.forEach(pet => {
         expect(pet.status).to.eq(pet.status)
       });
 
+      let petFound = response.body.filter(pet => pet.id === petId);
+      expect(petFound.length).to.eq(1)
     })
+
+   
+
   })
 
 })
