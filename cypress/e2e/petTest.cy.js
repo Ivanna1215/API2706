@@ -1,6 +1,7 @@
 
 import petTemplate from '../fixtures/pet.json';
 import { generateRandomPet } from '../support/helper';
+import { faker } from '@faker-js/faker';
 
 let pet = generateRandomPet(petTemplate, true, true, true, true, true);
 let petId;
@@ -93,9 +94,41 @@ describe('PET test suite', () => {
       let petFound = response.body.filter(pet => pet.id === petId);
       expect(petFound.length).to.eq(1)
     })
+  })
 
-   
+  it('Update pet with form data', () => {
+    pet.name = faker.animal.cat();
+    pet.status = 'new';
+    cy.request({
+      method: 'POST',
+      url: `/pet/${petId}`,
+      form: true,
+      body: {
+        petId: petId,
+        name: pet.name,
+        status: pet.status
+      }
+    }).then((response) => {
+      console.log(response.body)
+      expect(response.status).to.eq(200);
+      expect(response.body.code).to.eq(200);
+      expect(response.body.message).to.eq(`${pet.id}`);
 
+      cy.log('Get pet by id and verify pet updated');
+
+      cy.request('GET',`/pet/${petId}`).then((response) => {
+        expect(response.status).to.eq(200);
+        expect(response.body.name).to.eq(pet.name);
+        expect(response.body.category.id).to.eq(pet.category.id);
+        expect(response.body.category.name).to.eq(pet.category.name);
+        expect(response.body.tags[0].id).to.eq(pet.tags[0].id);
+        expect(response.body.tags[0].name).to.eq(pet.tags[0].name);
+        expect(response.body.tags[1].id).to.eq(pet.tags[1].id)
+        expect(response.body.tags[1].name).to.eq(pet.tags[1].name);
+        expect(response.body.status).to.eq(pet.status);
+      })
+
+    })
   })
 
 })
