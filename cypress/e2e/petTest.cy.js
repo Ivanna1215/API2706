@@ -116,7 +116,7 @@ describe('PET test suite', () => {
 
       cy.log('Get pet by id and verify pet updated');
 
-      cy.request('GET',`/pet/${petId}`).then((response) => {
+      cy.request('GET', `/pet/${petId}`).then((response) => {
         expect(response.status).to.eq(200);
         expect(response.body.name).to.eq(pet.name);
         expect(response.body.category.id).to.eq(pet.category.id);
@@ -126,6 +126,31 @@ describe('PET test suite', () => {
         expect(response.body.tags[1].id).to.eq(pet.tags[1].id)
         expect(response.body.tags[1].name).to.eq(pet.tags[1].name);
         expect(response.body.status).to.eq(pet.status);
+      })
+
+    })
+  })
+
+  it('Delete pet', () => {
+    cy.log('Delete pet');
+    cy.request({
+      method: 'DELETE',
+      url: `/pet/${petId}`,
+    }).then((response) => {
+      expect(response.status).to.eq(200);
+      expect(response.body.code).to.eq(200);
+      expect(response.body.message).to.eq(`${pet.id}`);
+
+      cy.log('Get pet by id and verify pet updated');
+
+      cy.request({
+        method: 'GET',
+        url: `/pet/${petId}`,
+        failOnStatusCode: false
+      }).then((response) => {
+        expect(response.status).to.eq(404)
+        expect(response.body.code).to.eq(1)
+        expect(response.body.message).to.eq('Pet not found');
       })
 
     })
